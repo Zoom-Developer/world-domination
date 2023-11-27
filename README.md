@@ -20,3 +20,8 @@
   **3.** `npm add yarn`\
   **4.** `yarn`\
   **5.** `yarn dev`
+
+## Авторство
+
+**Backend, JS Developer -** [Александр Замараев (Zoom Developer)](https://vk.com/id380487228)\
+**Layout Designer, UI/UX Designer -** [Александр Замараев (Zoom Developer)](https://vk.com/id380487228)
