@@ -4,19 +4,17 @@
 
 ## Запуск
 
-  ### Server-side (API)
+* ### Server-side (API)
   **1.** `Установка Python3.8+`\
   **2.** `cd backend`\
   **3.** `pip install -r requirements.txt`\
   **4.** `uvicorn main:app`
 
-## Запуск
+* ### Frontend
+  Первоначальная настройка\
+  **1.** `В файле src/assets/js/config.js поменять API_URL на URL вашего API без "/" в конце`
 
-  ### Frontend
-  > Первоначальная настройка >\
-  **1.** `В файле src/assets/js/config.js поменять API_URL на URL вашего API без "/" в конце`\
-
-  > Запуск >\
+  Запуск\
   **1.** `Установка Node.JS последней версии`\
   **2.** `cd frontend`\
   **3.** `npm add yarn`\
