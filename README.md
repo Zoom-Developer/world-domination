@@ -24,4 +24,4 @@
 ## Авторство
 
 **Backend, JS Developer -** [Александр Замараев (Zoom Developer)](https://vk.com/id380487228)\
-**Layout Designer, UI/UX Designer -** [Александр Замараев (Zoom Developer)](https://vk.com/id380487228)
+**Layout Designer, UI/UX Designer -** [Рамир Воробьёв (Ramchike)](https://vk.com/id201887526)
