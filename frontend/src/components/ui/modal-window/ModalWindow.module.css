@@ -1,0 +1,111 @@
+.dialog {
+    top: 100%;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 593px;
+    height: fit-content;
+    padding-bottom: 5%;
+    flex-shrink: 0;
+    background-color: rgb(43, 42, 42);
+    border: none;
+    border-radius: 9px;
+    z-index: 1;
+}
+
+.dialog select {
+    top: 100%;
+    width: 75%;
+    height: 20%;
+    margin-top: 100px;
+    margin-left: 80px;
+    justify-content: center;
+    align-items: center;
+    color: #FFF;
+    padding: 20px;
+    text-align: center;
+    text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.10);
+    font-family: Inter;
+    font-size: 28px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+    background: #202020;
+    border: none;
+    transition: background-color 0.3s ease;
+    margin-bottom: 100px;
+    outline: none;
+}
+
+.dialog button {
+    margin-top: 10px;
+    margin-left: 15%;
+    border: none;
+    width: 410px;
+    height: 77px;
+    flex-shrink: 0;
+    border-radius: 9px;
+    background: rgba(21, 21, 21, 0.76);
+    color: #FFF;
+    text-align: center;
+    text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.10);
+    font-family: Inter;
+    font-size: 28px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+    cursor: pointer;
+    filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
+    transition: background-color 0.3s ease;
+}
+
+.dialog button:hover {
+    background-color: rgba(0, 0, 0, 0.65);
+}
+
+.dialog select option {
+    border: none;
+    background-color: rgba(0, 0, 0, 0.65);
+}
+
+.dialog select option:hover {
+    background-color: rgba(0, 0, 0, 0.65);
+}
+
+.dialog input {
+    margin-bottom: 10px;
+    padding-left: 15px;
+    border: none;
+    outline: none;
+    box-shadow: none;
+    width: 410px;
+    height: 62px;
+    flex-shrink: 0;
+    background-color: rgba(0, 0, 0, 0.24);
+    color: rgba(255, 255, 255, 0.51);
+    transition: background-color 0.3s ease;
+    font-family: Inter;
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 400;
+    margin-left: 15%;
+    border-radius: 9px;
+}
+
+.dialog input:hover {
+    background-color: rgba(0, 0, 0, 0.65);
+}
+
+
+.dialog input[type="number"]::-webkit-inner-spin-button, input[type="number"]::-webkit-outer-spin-button {
+  appearance: none;
+  appearance: none;
+  margin: 0;
+}
+
+.dialog input[type="number"] {
+  appearance: "textfield"; 
+}

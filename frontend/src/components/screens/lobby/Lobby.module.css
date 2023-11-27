@@ -1,0 +1,150 @@
+body {
+  margin: 0;
+  background: #202020;
+}
+
+.container {
+  margin-top: 10px;
+  position: relative;
+  width: 100%;
+}
+
+/* .dialog select:hover {
+    background-color: rgba(0, 0, 0, 0.65);
+  } */
+
+.link_button {
+  font-size: 18px;
+  margin-left: 50px;
+  cursor: pointer;
+  color: rgb(162, 162, 162);
+  text-decoration: underline;
+}
+
+.link_button:hover {
+  color: rgb(226, 226, 226);
+}
+
+.container span {
+  margin: 8px;
+  color: rgba(255, 255, 255, 0.70);
+  font-family: Inter;
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 300;
+  line-height: normal;
+}
+
+.container span b {
+  color: #FFF;
+  font-family: Inter;
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+}
+
+.playersinfo {
+  list-style-type: none;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  margin-left: 20px;
+}
+
+.playersinfo ul {
+  max-height: 70vh;
+  overflow-y: scroll;
+}
+
+.playersinfo ul::-webkit-scrollbar {
+  width: 12px;
+  background-color: transparent;
+}
+
+.playersinfo ul::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, .3);
+  background-color: #3f3f3f;
+}
+
+li {
+  list-style-type: none;
+}
+
+.title {
+  margin-bottom: 1px;
+  font-size: 28px;
+  /* width: 200px; */
+  color: rgba(255, 255, 255, 0.95);
+}
+
+.playersinfo li {
+  color: rgba(255, 255, 255, 0.55);
+  font-family: Inter;
+  font-size: 22px;
+  font-style: normal;
+  font-weight: 350;
+  padding: 0px;
+}
+
+
+.playersinfo li b {
+  color: #FFF;
+  font-family: Inter;
+  font-size: 22px;
+  font-style: normal;
+  font-weight: 350;
+  line-height: normal;
+  padding: 0px;
+}
+
+.playersinfo li .count {
+  font-size: 26px;
+}
+
+.top-left {
+  position: fixed;
+  top: 5px;
+  left: 5px;
+}
+
+.top-right {
+  position: fixed;
+  top: 5px;
+  right: 5px;
+}
+
+
+.center-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  height: 90vh;
+}
+
+.center-wrapper button {
+  border: none;
+  width: 410px;
+  height: 77px;
+  flex-shrink: 0;
+  margin: 5px;
+  border-radius: 9px;
+  background: rgba(21, 21, 21, 0.76);
+  color: #FFF;
+  text-align: center;
+  text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.10);
+  font-family: Inter;
+  font-size: 28px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  cursor: pointer;
+  filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
+  transition: background-color 0.3s ease;
+}
+
+.center-wrapper button:hover {
+  background-color: rgba(0, 0, 0, 0.65);
+}

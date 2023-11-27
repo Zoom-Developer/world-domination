@@ -1,0 +1,116 @@
+.category-header {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+}
+
+.category-header h2,
+.category-header span {
+    color: rgba(255, 255, 255, 0.6);
+    text-align: center;
+    font-family: Inter;
+    font-size: 22px;
+    font-style: normal;
+    font-weight: 300;
+    line-height: normal;
+    border: none;
+    background-color: transparent;
+    outline: none;
+}
+
+.category-header span {
+    position: relative;
+    cursor: pointer;
+    user-select: none;
+    padding-right: 20px;
+}
+
+.category-header span::after {
+    content: "";
+    position: absolute;
+    top: 45%;
+    right: 0;
+    transform: scale(1, var(--scale));
+    border-style: solid;
+    border-width: 6px 6px 0 6px;
+    border-color: rgba(255, 255, 255, 0.6) transparent transparent transparent;
+}
+
+.category-header b {
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.line {
+    margin-top: 10px;
+    height: 1px;
+    padding-bottom: 0px;
+    width: 90%;
+    background: rgba(255, 255, 255, 0.10);
+}
+
+.game-stats {
+    position: fixed;
+    left: 13px;
+    bottom: 7px;
+}
+
+.game-stats h4 {
+    color: rgba(255, 255, 255, 0.70);
+    font-family: Inter;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 350;
+    line-height: normal;
+}
+
+.game-stats h4 b {
+    font-family: Inter;
+    font-style: normal;
+    font-weight: 350;
+    line-height: normal;
+}
+
+.game-info {
+    position: fixed;
+    right: 13px;
+    bottom: 9px;
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 16px;
+    text-align: right;
+}
+
+.game-info h4,
+b {
+    font-family: Inter;
+    font-style: normal;
+    font-weight: 350;
+    line-height: normal;
+}
+
+b {
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.round-timer {
+    width: 100%;
+    margin-top: 15px;
+    margin-bottom: 15px;
+    font-family: Inter;
+    color: rgba(255, 255, 255, 0.25);
+    text-align: center;
+}
+
+.endgame {
+    text-align: center;
+    margin-top: 20vh;
+    font-weight: 500;
+    font-size: 46px;
+    font-family: Inter;
+    color: rgba(255, 255, 255, 0.25);
+}
+
+.endgame b {
+    font-weight: 500;
+}
