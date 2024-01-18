@@ -5,7 +5,7 @@
 ## Запуск
 
 * ### Server-side (API)
-  **1.** `Установка Python3.8+`\
+  **1.** `Установка Python3.10+`\
   **2.** `cd backend`\
   **3.** `pip install -r requirements.txt`\
   **4.** `uvicorn main:app`
