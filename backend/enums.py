@@ -28,6 +28,7 @@ class EventType(str, Enum):
     COUNTRY_UPGRADE = "upgradecountry"
     COUNTRY_TRANSFER = "transfermoney"
     COUNTRY_SPY = "countryspy"
+    COUNTRY_CALL_OWNER = "countrycallowner"
 
     # STAGE EVENT TYPES
     NUCLEAR_ATTACK = "nuclearattack"

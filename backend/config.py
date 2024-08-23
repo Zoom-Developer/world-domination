@@ -14,7 +14,7 @@ SANCTION_EFFECT = 0.1 # - %
 CITY_INCOME_RAISE = 10 # Единиц валюты
 CITY_PRICE_RAISE = 30 # Единиц валюты
 
-DEBUG_MODE = False
+DEBUG_MODE = True
 
 PRICES = {
     "level_upgrade": 30,

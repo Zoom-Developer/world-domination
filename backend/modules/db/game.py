@@ -413,8 +413,19 @@ class Game:
         
         else: return False
 
+    async def callOwner(self, country: Country) -> None:
+
+        if not self.actions_accessed: return False
+        await country.addLog("<b style='color: #0ba2e9;'>Страна вызывает ведущего</b>")
+        await self.room.eventmanager.addEvent(
+            type = EventType.COUNTRY_CALL_OWNER,
+            data = country.toPydanticModel(True),
+            targets = country.users
+        )
+
     async def donateEcology(self, country: Country) -> bool:
 
+        if not self.actions_accessed: return False
         price = PRICES['donate_ecology'] + (country.ecology_count * DONATE_ECOLOGY_RAISE * PRICES['donate_ecology'])
 
         if country.balance < price: return False

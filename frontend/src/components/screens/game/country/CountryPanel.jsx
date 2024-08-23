@@ -63,6 +63,14 @@ export default function CountryPanel({country, game, user, setUser}) {
         })
     }
     
+    function callOwner() {
+        api.request("/game/call", "POST")
+        .then(async response => {
+            const json = await response.json()
+            if (response.status != 200) Notify.failure(json.detail)
+        })
+    }
+
     function setReady(ready) {
         api.request("/room/user/@me", "PATCH", {ready: ready})
         .then(async response => {
@@ -106,6 +114,7 @@ export default function CountryPanel({country, game, user, setUser}) {
 
             <button onClick={() => setVisibleSanctions(true)}>Санкции</button>
             <button onClick={() => setVisibleTransfer(true)}>Перевод</button>
+            <button onClick={callOwner}>Вызов ведущего</button>
             <br />
             <button onClick={donateEcology}>Вклад в экологию<br />{`(${game.config.DONATE_ECOLOGY + (game.config.DONATE_ECOLOGY * 0.3 * country.ecology_total)}$)`}</button>
             <button onClick={() => setReady(!user.ready)}>{user.ready ? "Отменить готовность" : "Готов"}</button>

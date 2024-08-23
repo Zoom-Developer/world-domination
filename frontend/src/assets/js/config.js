@@ -30,6 +30,7 @@ const config = {
         GAME_STARTED: "startgame",
         GAME_ENDED: "endgame",
         GAME_ROUND_CHANGED: "nextround",
+        COUNTRY_CALL_OWNER: "countrycallowner",
     
         // COUNTRY TYPES
         COUNTRY_UPGRADE: "upgradecountry",

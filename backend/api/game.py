@@ -129,6 +129,15 @@ async def donate_ecology(country: database.Country = Depends(validCountry), user
 
     return country.game.toPydanticModel(user = user)
 
+@GameRouter.post("/call")
+async def donate_ecology(country: database.Country = Depends(validCountry), user: database.User = Depends(getUser)) -> Country:
+    """
+    Вызов ведущего
+    """
+
+    await country.game.callOwner(country)
+    return country.toPydanticModel(True)
+
 # @GameRouter.post("/country/{countryId}/spy")
 # async def country_spy(target: database.Country = Depends(getCountry), country: database.Country = Depends(validCountry)) -> Country:
 #     """

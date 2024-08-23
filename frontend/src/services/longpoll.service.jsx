@@ -4,11 +4,12 @@ import { ApiService } from "./api.service";
 
 export class LongpollService {
 
-    constructor({setRoom, setUser, setGame, setCountry, updateGameInfo, country, nav}) {
+    constructor({isOwner, setRoom, setUser, setGame, setCountry, updateGameInfo, country, nav}) {
+        this.isOwner = isOwner
         this.setRoom = setRoom
         this.setUser = setUser
         this.setGame = setGame
-        this.setCountry = setCountry
+        this.setCountryF = setCountry
         this.updateGameInfo = updateGameInfo
         this.nav = nav
         this.country = country
@@ -45,6 +46,15 @@ export class LongpollService {
                 });
             }
         });
+    }
+
+    setCountry(country) {
+        this.setGame(game => {
+            const idx = game.countries.findIndex(c => c.id == country.id)
+            game.countries[idx] = (typeof(country) == "function") ? country(game.countries[idx]) : country
+            return {...game}
+        })
+        if (!this.isOwner) this.setCountryF(country)
     }
 
     longpollHandler(event) {
@@ -95,11 +105,6 @@ export class LongpollService {
 
             case EventType.COUNTRY_UPGRADE:
                 this.setCountry(event.data)
-                this.setGame(game => {
-                    const idx = game.countries.findIndex(c => c.id == event.data.id)
-                    game.countries[idx] = event.data
-                    return {...game}
-                })
                 break
 
             case EventType.SEND_SANCTION:
@@ -108,7 +113,7 @@ export class LongpollService {
                     Notify.warning(`Страна ${config.Countries[event.data.sender.id]} наложила на вас санкции`)
                 }
                 else Notify.info(`Вы наложили санкции на страну ${config.Countries[event.data.receiver.id]}`)
-                this.setCountry(prev => {
+                this.setCountryF(prev => {
                     prev.logs.push(event.data.log)
                     return {...prev}
                 })
@@ -145,6 +150,14 @@ export class LongpollService {
             case EventType.GAME_ENDED:
                 Notify.info("Игра окончена")
                 this.updateGameInfo()
+                break
+
+            case EventType.COUNTRY_CALL_OWNER:
+                this.setCountry(event.data)
+                if (this.isOwner) {
+                    const sound = new Audio("/call.mp3")
+                    sound.play()
+                }
                 break
         }
     }

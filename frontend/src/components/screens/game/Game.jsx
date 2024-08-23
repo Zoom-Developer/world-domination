@@ -27,6 +27,7 @@ export default function Game() {
             const jsonUser = await response.json()
             setUser(jsonUser)
             const country_ = jsonGame.countries.find(country => country.id == jsonUser.country)
+            longpoll.isOwner = jsonUser.isowner
             setCountry(country_)
             if (startlong) {
                 longpoll.country = country_
@@ -38,7 +39,7 @@ export default function Game() {
     const nf = Intl.NumberFormat()
     const nav = useNavigate()
     const api = new ApiService(nav)
-    const [longpoll] = useState(new LongpollService({"setGame": setGame, "setCountry": setCountry, "nav": nav, "updateGameInfo": getGame}))
+    const [longpoll] = useState(new LongpollService({"setGame": setGame, "setCountry": setCountry, "nav": nav, "updateGameInfo": getGame, "isOwner": user.isowner}))
 
     useEffect(() => {
 

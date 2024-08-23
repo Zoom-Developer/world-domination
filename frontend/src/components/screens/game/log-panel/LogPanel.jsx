@@ -8,7 +8,7 @@ export default function LogPanel({logs, for_owner}) {
         <div className={styles['log-panel']} style={(for_owner) ? {width: "450px"} : {}} >
             <ul>
                 {
-                    logs.map(log => {
+                    logs.sort((x, y) => new Date(x.time + "Z") - new Date(y.time + "Z")).map(log => {
                         const formattedText = log.text.replace(/(\w+)/g, match => config.Countries[match] || match)
                         return (<li key={logs.indexOf(log)}>
                             <b className={styles.time}>{new Date(log.time + "Z").toLocaleTimeString()}</b>

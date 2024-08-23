@@ -20,7 +20,7 @@ export default function Lobby() {
 
 	const nav = useNavigate()
 	const api = new ApiService(nav)
-	const [longpoll] = useState(new LongpollService({"setRoom": setRoom, "setUser": setUser, "nav": nav}))
+	const [longpoll] = useState(new LongpollService({"setRoom": setRoom, "setUser": setUser, "nav": nav, "isOwner": user.isowner}))
 
 	const unsecuredCopyToClipboard = (text) => { const textArea = document.createElement("textarea"); textArea.value=text; document.body.appendChild(textArea); textArea.focus();textArea.select(); try{document.execCommand('copy')}catch(err){console.error('Unable to copy to clipboard',err)}document.body.removeChild(textArea)};
 
@@ -35,7 +35,9 @@ export default function Lobby() {
 				if (json.started) nav("/game")
 				else {
 					api.request("/room/user", "GET").then(async (response) => {
-						setUser(await response.json())
+						const usr = await response.json()
+						setUser(usr)
+						longpoll.isOwner = usr.isowner
 					})
 					longpoll.Start()
 				}
