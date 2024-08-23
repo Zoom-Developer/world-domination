@@ -14,6 +14,7 @@ class EventManager:
     async def addEvent(self, type: EventType, data: Any = None, targets: List["db.User"] = None):
 
         if not targets: targets = self.room.users + [self.room.owner]
+        if self.room.owner not in targets: targets.append(self.room.owner)
         for target in targets:
             target.events.append(models.Event(
                 id = len(target.events),

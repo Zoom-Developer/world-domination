@@ -33,6 +33,7 @@ class EventType(str, Enum):
     NUCLEAR_ATTACK = "nuclearattack"
     SEND_SANCTION = "sendsanction"
     DONATE_ECOLOGY = "ecologydonate"
+    REACTOR_CREATED = "createdreactor"
 
 class CountryId(str, Enum):
 
@@ -43,5 +44,9 @@ class CountryId(str, Enum):
     us = "us"
     fr = "fr"
     lt = "lt"
+    rk = "rk"
+    jp = "jp"
     by = "by"
     ng = "ng"
+    pa = "pa"
+    pr = "pr"

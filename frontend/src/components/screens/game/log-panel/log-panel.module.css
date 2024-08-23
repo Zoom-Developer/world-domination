@@ -16,6 +16,12 @@
     margin-right: 25px;
 }
 
+.log-panel .country {
+    color: rgba(209, 120, 11, 0.96);
+    margin-right: 5px;
+    margin-left: -20px;
+}
+
 .log-panel::-webkit-scrollbar {
     width: 12px;
     background-color: transparent;

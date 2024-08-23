@@ -1,31 +1,32 @@
 DEFAULT_CITY_LEVEL = 1
-DEFAULT_CITY_INCOME = 10
+DEFAULT_CITY_INCOME = 20
 DEFAULT_BALANCE = 200
 MAXIMUM_CITY_LEVEL = 5
 
 ROUND_TIME = 10 * 60
 END_STAGE = 6
 
-NUCLEAR_ECOLOGY = -20 # Единиц экологии
+NUCLEAR_REACTOR_ECOLOGY = -3 # Единиц экологии
+NUCLEAR_ROCKET_ECOLOGY = -5 # Единиц экологии
 DONATE_ECOLOGY = 20 # Единиц экологии
-DONATE_ECOLOGY_RAISE = 0.3 # + %
+DONATE_ECOLOGY_RAISE = 0.2 # + %
 SANCTION_EFFECT = 0.1 # - %
-CITY_INCOME_RAISE = 20 # Единиц валюты
-CITY_PRICE_RAISE = 10 # Единиц валюты
+CITY_INCOME_RAISE = 10 # Единиц валюты
+CITY_PRICE_RAISE = 30 # Единиц валюты
 
 DEBUG_MODE = False
 
 PRICES = {
-    "level_upgrade": 40,
-    "air_defense": 70,
-    "nuclear_reactor": 200,
-    "nuclear_rocket": 80,
-    "donate_ecology": 30,
-    "send_sanction": 20,
+    "level_upgrade": 30,
+    "air_defense": 60,
+    "nuclear_reactor": 120,
+    "nuclear_rocket": 40,
+    "donate_ecology": 15,
+    "send_sanction": 10,
     "country_spy": 20
 }
 
-CITIES = {
+CITIES = { # 1 город - столица
     "ru": [
         "Москва",
         "Санкт-Питербург",
@@ -62,6 +63,12 @@ CITIES = {
         "Лиль",
         "Нант"
     ],
+    "pr": {
+        "Лиссабон (столица)",
+        "Порту",
+        "Брага",
+        "Лореш",
+    },
     "lt": [
         "Рим",
         "Милан",
@@ -74,8 +81,26 @@ CITIES = {
         "Витебск",
         "Могилёв"
     ],
+    "pa": [
+        "Газа (столица)",
+        "Хан-Юнис",
+        "Джебалия",
+        "Рафах",
+    ],
+    "rk": [
+        "Пхеньян",
+        "Хамхын",
+        "Кэсон",
+        "Синыйджу"
+    ],
+    "jp": [
+        "Токио",
+        "Осака",
+        "Киото",
+        "Чиба",
+    ],
     "ng": [
-        "Лагос",
+        "Абуджа",
         "Ибадан",
         "Кано",
         "Порт-Харкорт"

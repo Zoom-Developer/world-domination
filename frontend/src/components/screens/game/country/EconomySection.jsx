@@ -2,6 +2,7 @@ import styles from './Country.module.css'
 import PropType from 'prop-types'
 import { ApiService } from '../../../../services/api.service'
 import { Notify } from 'notiflix'
+import { getCityMaxLevel } from '../../../../assets/js/utils'
 
 export default function EconomySection({game, country}) {
 
@@ -28,16 +29,16 @@ export default function EconomySection({game, country}) {
                         <div key={i} className={styles['card-economy']}>
                             <div className={styles['city-header']}>
                                 <h3>{city.title}</h3>
-                                <h4>Стоимость уровня: <b>{city.level < game.config.MAX_CITY_LEVEL ? (nf.format(game.config.LEVEL_UPGRADE_PRICE + (10 * (city.level - 1))) + "$") : "MAX"}</b></h4>
+                                <h4>Стоимость уровня: <b>{city.level < getCityMaxLevel(game, city) ? (nf.format(game.config.LEVEL_UPGRADE_PRICE + (game.config.CITY_PRICE_RAISE * (city.level - 1))) + "$") : "MAX"}</b></h4>
                             </div>
                             <div className={styles['city-header']}>
                                 <ul>
                                     <li>Текущий уровень города: <b>{city.level}</b></li>
-                                    <li>Доход за раунд: <b>{city.income}$</b> <b>{city.level < game.config.MAX_CITY_LEVEL && "(+20)"}</b></li>
+                                    <li>Доход за раунд: <b>{city.income}$</b> <b>{city.level < getCityMaxLevel(game, city) && `(+${game.config.CITY_INCOME_RAISE})`}</b></li>
                                     <li>ПВО: <b>{city.air_defense ? "Есть" : "Нет"}</b></li>
                                 </ul>
                             </div>
-                            <button onClick={() => upgradeCity(i)}>Улучшить</button>
+                            <button onClick={() => upgradeCity(i)} disabled={city.level == getCityMaxLevel(game, city)}>Улучшить</button>
                         </div>
                     ))
                 }

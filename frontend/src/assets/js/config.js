@@ -1,5 +1,5 @@
 const config = {
-    API_URL: "http://localhost:8000",
+    API_URL: import.meta.env.VITE_API_URL,
 
     // ENUMS
 
@@ -11,8 +11,12 @@ const config = {
         us: "США",
         fr: "Франция",
         lt: "Италия",
+        rk: "КНДР",
+        jp: "Япония",
         by: "Беларусь",
-        ng: "Ниггерия"
+        pa: "Палестина",
+        pr: "Португалия",
+        ng: "Нигерия"
     },
 
     EventType: {

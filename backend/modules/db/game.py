@@ -9,13 +9,15 @@ import models, asyncio
 
 class City:
 
-    def __init__(self, title: str, id: int, country: "Country"):
+    def __init__(self, title: str, id: int, country: "Country", capital: bool = False):
 
         self.title = title
         self.id = id
         self.country = country
+        self.capital = capital
         
         self.level = DEFAULT_CITY_LEVEL
+        if self.capital: self.level += 1
         self.air_defense = False
 
     async def upgrade(self, type: CityUpgradeType) -> bool:
@@ -25,16 +27,17 @@ class City:
         match type:
 
             case CityUpgradeType.LEVEL_UPGRADE: 
-                if self.level >= MAXIMUM_CITY_LEVEL: return False
+                if self.level >= MAXIMUM_CITY_LEVEL + (1 if self.capital else 0): return False
                 self.level += 1
+                self.country.balance -= self.upgrade_price
                 await self.country.addLog("Уровень города <b>%s</b> повышен до %s" % (self.title, self.level))
 
             case CityUpgradeType.AIR_DEFENSE:
                 if self.air_defense: return False
                 self.air_defense = True
+                self.country.balance -= PRICES["air_defense"]
                 await self.country.addLog("Куплено ПВО для города <b>%s</b>" % self.title)
     
-        self.country.balance -= self.upgrade_price
         await self.country.sendUpdateEvent()
 
         return True
@@ -61,6 +64,7 @@ class City:
             id = self.id,
             title = self.title,
             country = self.country.id,
+            capital = self.capital,
             level = self.level if full else None,
             income = self.income if full else None,
             air_defense = self.air_defense if full else None
@@ -82,7 +86,8 @@ class Country:
         self.ecology_count = 0
         self.nuclear_rockets = 0
         self.nuclear_reactor = False
-        self.cities = {i: City(title, i, self) for i, title in enumerate(CITIES[country])}
+        self.nuclear_reactor_creating = False
+        self.cities = {i: City(title, i, self, i == 0) for i, title in enumerate(CITIES[country])}
 
     async def addUser(self, user: "db.User"):
 
@@ -96,8 +101,9 @@ class Country:
         match type:
 
             case CountryUpgradeType.NUCLEAR_REACTOR:
-                if self.nuclear_reactor: return False
-                self.nuclear_reactor = True
+                if self.nuclear_reactor or self.nuclear_reactor_creating: return False
+                self.nuclear_reactor_creating = True
+                await self.game.room.eventmanager.addStageEvent(type = EventType.REACTOR_CREATED, data = self)
                 await self.addLog("Приобретён <b>ядерный реактор</b>")
 
             case CountryUpgradeType.NUCLEAR_ROCKET:
@@ -177,6 +183,15 @@ class Country:
         )
         
         return True
+    
+    async def addMoney(self, value: int):
+
+        self.balance += value
+        await self.game.room.eventmanager.addEvent(
+            type = EventType.COUNTRY_UPGRADE,
+            data = self.toPydanticModel(True),
+            targets = self.users
+        )
     
     async def addLog(self, text: str) -> models.Log:
 
@@ -317,7 +332,7 @@ class Game:
                         if not attacked.country.cities:
                             self._meeting_data["destroyed_countries"].append(attacked.toPydanticModel(False))
                             await attacked.country.delete()
-                        self.ecology += NUCLEAR_ECOLOGY
+                        self.ecology += NUCLEAR_ROCKET_ECOLOGY
 
                 case EventType.SEND_SANCTION:
 
@@ -330,6 +345,13 @@ class Game:
 
                     self.ecology += DONATE_ECOLOGY
                     self._meeting_data['ecology_donates'].append(event.data.toPydanticModel(False))
+
+                case EventType.REACTOR_CREATED:
+
+                    country: Country = event.data
+                    country.nuclear_reactor_creating = False
+                    country.nuclear_reactor = True
+                    self.ecology += NUCLEAR_REACTOR_ECOLOGY
 
         await self.room.eventmanager.clearStageEvents()
 
@@ -409,7 +431,13 @@ class Game:
         await self.room.eventmanager.addEvent(type = EventType.DONATE_ECOLOGY, data = country.toPydanticModel(True), targets = country.users)
 
         return True
-
+    
+    # async def get_all_logs(self) -> list[models.Log]:
+    #     logs = []
+    #     for country in self.countries.values():
+    #         logs += country.logs
+    #     return logs
+    
     @property
     def actions_accessed(self) -> bool:
 
@@ -424,6 +452,7 @@ class Game:
     def active_users_total(self) -> int:
 
         return len([user for user in self.room.users if user.country])
+        
     
     def toPydanticModel(self, user: "db.User" = None) -> models.Game:
 

@@ -48,6 +48,7 @@ export class LongpollService {
     }
 
     longpollHandler(event) {
+        console.log(event)
         const EventType = config.EventType
         switch (event.type) {
             case EventType.USER_JOINED:
@@ -94,6 +95,11 @@ export class LongpollService {
 
             case EventType.COUNTRY_UPGRADE:
                 this.setCountry(event.data)
+                this.setGame(game => {
+                    const idx = game.countries.findIndex(c => c.id == event.data.id)
+                    game.countries[idx] = event.data
+                    return {...game}
+                })
                 break
 
             case EventType.SEND_SANCTION:

@@ -13,7 +13,7 @@ fileHandler = logging.FileHandler("log.txt")
 fileHandler.setLevel(logging.ERROR)
 logging.getLogger().addHandler(fileHandler)
 
-app = FastAPI(title="World Domination API")
+app = FastAPI(title="World Domination API", root_path="/api")
 
 app.add_middleware(
     CORSMiddleware,
