@@ -16,7 +16,7 @@ export default function CountryPanel({country, game, user, setUser}) {
     const [selectedPage, setSelectedPage] = useState("army")
 
     const [selectedCountry, setSelectedCountry] = useState(game.countries[0].id)
-    const [selectedCity, setSelectedCity] = useState(game.countries[0].cities[0].id)
+    const [selectedCity, setSelectedCity] = useState(game.countries[0].cities[0] ? game.countries[0].cities[0].id : null)
     const [transferValue, setTransferValue] = useState("")
 
     const [visibleSanctions, setVisibleSanctions] = useState(false)
@@ -92,7 +92,7 @@ export default function CountryPanel({country, game, user, setUser}) {
                     }
                     {
                         country.sanctions.map(sanction_country => (
-                            <div key={sanction_country}><span style={{color: "red"}}>-10% <b>(Санкция {config.Countries[sanction_country]})</b></span></div>
+                            <div key={sanction_country}><span style={{color: "red"}}>-{game.config.SANCTION_EFFECT * 100}% <b>(Санкция {config.Countries[sanction_country]})</b></span></div>
                         ))
                     }
                 </ImageTooltip> : ""
@@ -116,7 +116,7 @@ export default function CountryPanel({country, game, user, setUser}) {
             <button onClick={() => setVisibleTransfer(true)}>Перевод</button>
             <button onClick={callOwner}>Вызов ведущего</button>
             <br />
-            <button onClick={donateEcology}>Вклад в экологию<br />{`(${game.config.DONATE_ECOLOGY + (game.config.DONATE_ECOLOGY * 0.3 * country.ecology_total)}$)`}</button>
+            <button onClick={donateEcology}>Вклад в экологию<br />{`(${game.config.DONATE_ECOLOGY + (game.config.DONATE_ECOLOGY * game.config.DONATE_ECOLOGY_RAISE * country.ecology_total)}$)`}</button>
             <button onClick={() => setReady(!user.ready)}>{user.ready ? "Отменить готовность" : "Готов"}</button>
             <button onClick={() => setVisibleNuclear(true)}>Запуск боеголовки</button>
 
@@ -130,7 +130,7 @@ export default function CountryPanel({country, game, user, setUser}) {
         {visibleTransfer && 
             <ModalWindow button_title={"Совершить перевод"} button_callback={() => transferMoney(selectedCountry, transferValue)} setOpened={setVisibleTransfer}>
                 {countrySelect({marginBottom: 10})}
-                <input type="number" value={transferValue} placeholder='Сумма для перевода' onChange={e => setTransferValue(e.target.value)} style={{marginBottom: 100}} />
+                <input type="number" value={transferValue} min={1} placeholder='Сумма для перевода' onChange={e => setTransferValue(e.target.value)} style={{marginBottom: 100}} />
             </ModalWindow>
         }
         {visibleNuclear && 

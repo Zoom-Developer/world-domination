@@ -2,7 +2,7 @@ from fastapi import APIRouter, HTTPException, Depends, Body
 from models import Game, City, Country
 from enums import CityUpgradeType, CountryUpgradeType, EventType
 from utils import getUser, getCity, getCityByCountry, getCountry, gameStarted, isOwner, validCountry
-from config import PRICES, DEBUG_MODE
+from config import PRICES, DEBUG_MODE, SEND_NUCLEAR_STAGE
 import modules.db as database
 
 GameRouter = APIRouter()
@@ -56,8 +56,6 @@ async def upgrade_city(upgrade_type: CityUpgradeType = Body(embed=True), city: d
     Улучшение города
     """
 
-    if (city.upgrade_price if upgrade_type == CityUpgradeType.LEVEL_UPGRADE else PRICES[upgrade_type]) > country.balance: raise HTTPException(403, "Недостаточно средств")
-
     res = await city.upgrade(upgrade_type)
     if not res: raise HTTPException(403, "Невозможно купить данное улучшение")
 
@@ -68,9 +66,7 @@ async def upgrade_country(upgrade_type: CountryUpgradeType = Body(embed=True), c
     """
     Улучшение страны
     """
-
-    if PRICES[upgrade_type] > country.balance: raise HTTPException(403, "Недостаточно средств")
-
+    
     res = await country.upgrade(upgrade_type)
     if not res: raise HTTPException(403, "Невозможно купить данное улучшение")
 
@@ -83,6 +79,7 @@ async def nuclear_attack(country: database.Country = Depends(validCountry), city
     """
 
     if country == city.country: raise HTTPException(403, "Вы не можете нанести удар по своей стране")
+    if country.game.stage < SEND_NUCLEAR_STAGE: raise HTTPException(403, "Отправка ядерной боеголовки возможно только с 3 раунда")
 
     res = await country.nuclearAttack(city)
     if not res: raise HTTPException(403, "У вас отсутствует ядерное вооружение")
@@ -112,6 +109,7 @@ async def transfer_money(value: int = Body(embed = True), country: database.Coun
 
     if target == country: raise HTTPException(403, "Вы не можете совершить перевод своей стране")
     if value > country.balance: raise HTTPException(403, "Недостаточно средств")
+    if value < 1: raise HTTPException(403, "Минимальная сумма - 1$") 
     
     res = await country.transferMoney(target, value)
     if not res: raise HTTPException(403, "Невозможно совершить перевод")

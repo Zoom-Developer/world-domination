@@ -10,7 +10,14 @@ body {
     text-align: center;
 }
 
-.round-end-info h1 {
+.content {
+    display: flex;
+    flex-direction: row;
+    width: calc(100% - 50px);
+    padding: 25px;
+}
+
+.content h1 {
     color: rgba(255, 255, 255, 0.45);
     text-align: center;
     font-family: Inter;
@@ -20,23 +27,22 @@ body {
     line-height: normal;
 }
 
-.round-end-info h1 b {
+.content b {
     color: #FFF;
     font-weight: 400;
     font-family: Inter;
 }
 
-.round-end-info b {font-size: 22px;}
+.content b {font-size: 22px;}
 
 .round-end-info {
     display: flex;
-    margin-top: 25px;
-    margin-left: 24px;
+    width: 50%;
     flex-direction: column;
-    gap: 31px;
+    gap: 30px;
 }
 
-.round-end-info h2 {
+.content h2 {
     color: rgba(255, 255, 255, 0.25);
     font-family: Inter;
     font-size: 34px;
@@ -44,7 +50,7 @@ body {
     line-height: normal;
 }
 
-.round-end-info h3 {
+.content h3 {
     color: rgba(255, 255, 255, 0.35);
     font-family: Inter;
     font-size: 26px;
@@ -52,7 +58,7 @@ body {
     line-height: normal;
 }
 
-.round-end-info h4 {
+.content h4 {
     color: rgba(255, 255, 255, 0.95);
     font-family: Inter;
     font-size: 22px;
@@ -61,7 +67,7 @@ body {
     line-height: normal;
 }
 
-.round-end-info li {
+.content span {
     color: rgba(255, 255, 255, 0.55);
     font-family: Inter;
     font-size: 22px;
@@ -70,11 +76,18 @@ body {
     line-height: normal;
 }
 
-.round-end-info li b {
+.content span b {
     color: #FFF;
 }
 
-.round-end-info ul {
-    list-style: none;
-    padding: 0;
+.sanctions {
+    display: flex;
+    flex-direction: column;
+}
+
+.countries {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 50%;
 }

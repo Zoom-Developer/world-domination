@@ -26,44 +26,54 @@ export default function MeetingPage({game, country, user}) {
             <div className={game_styles.line}></div>
         </div>
 
-        <div className={styles["round-end-info"]}>
-            <div>
-                <h3>Уничтоженные города:</h3>
-                <h4>
-                    {game.meeting.destroyed_cities.map(data => (
-                        <b key={data.id}>{`${data.title} (${config.Countries[data.country]}), `}</b>
-                    ))}
-                </h4>
+        <div className={styles.content}>
+            <div className={styles["round-end-info"]}>
+                <div>
+                    <h3>Уничтоженные города:</h3>
+                    <h4>
+                        {game.meeting.destroyed_cities.map(data => (
+                            <b key={data.id}>{`${data.title} (${config.Countries[data.country]}), `}</b>
+                        ))}
+                    </h4>
+                </div>
+                <div>
+                    <h3>Уничтоженные страны:</h3>
+                    <h4>
+                        {game.meeting.destroyed_countries.map(data => (
+                            <b key={data.id}>{`${config.Countries[data.id]}, `}</b>
+                        ))}
+                    </h4>
+                </div>
+                <div>
+                    <h3>Санкции:</h3>
+                    <div className={styles.sanctions}>
+                        {game.meeting.sanctions.map(data => (
+                            <span key={data.id}>{ReactHtmlParser(`<b>${config.Countries[data.sender.id]}</b> наложил санкции на <b>${config.Countries[data.receiver.id]}.</b>`)}</span>
+                        ))}
+                    </div>
+                </div>
+                <div>
+                    <h3>Вклады в экологию:</h3>
+                    <h4>
+                        {game.meeting.ecology_donates.reduce((acc, obj) => acc.find(item => item.id === obj.id) ? acc : [...acc, obj], []).map(data => (
+                            <b key={data.id}>{`${config.Countries[data.id]} (+${game.meeting.ecology_donates.filter(c => c.id == data.id).length * 20}%)`}, </b>
+                        ))}
+                    </h4>
+                </div>
             </div>
-            <div>
-                <h3>Уничтоженные страны:</h3>
-                <h4>
-                    {game.meeting.destroyed_countries.map(data => (
-                        <b key={data.id}>{`${config.Countries[data.id]}, `}</b>
-                    ))}
-                </h4>
-            </div>
-            <div>
-                <h3>Санкции:</h3>
-                <ul>
-                    {game.meeting.sanctions.map(data => (
-                        <li key={data.id}>{ReactHtmlParser(`<b>${config.Countries[data.sender.id]}</b> наложил санкции на <b>${config.Countries[data.receiver.id]}.</b>`)}</li>
-                    ))}
-                </ul>
-            </div>
-            <div>
-                <h3>Вклады в экологию:</h3>
-                <h4>
-                    {game.meeting.ecology_donates.reduce((acc, obj) => acc.find(item => item.id === obj.id) ? acc : [...acc, obj], []).map(data => (
-                        <b key={data.id}>{`${config.Countries[data.id]} (+${game.meeting.ecology_donates.filter(c => c.id == data.id).length * 20}%)`}, </b>
-                    ))}
-                </h4>
+            <div className={styles.countries}>
+                <h3>Соотношение стран</h3>
+                <br/>
+                {Object.keys(game.meeting.countries_progress).map(country => (
+                    <span key={country}>{config.Countries[country]} <b>({Math.round(game.meeting.countries_progress[country]*100)}%)</b></span>
+                ))}
             </div>
         </div>
 
-        <FormContainer>
-            {user.isowner && <button onClick={continueStage}>Продолжить игру</button>}
-        </FormContainer>
+        {user.isowner && <FormContainer>
+            <button onClick={continueStage}>Продолжить игру</button>
+        </FormContainer>}
+    
 
         {
             (!country && !user.isowner) &&

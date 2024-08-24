@@ -1,6 +1,7 @@
 from typing import Dict, List
 from datetime import datetime, timedelta
 from collections import deque
+from errors.game import NotEnoughMoney, NuclearAlreadySended
 from config import *
 from enums import EventType, CityUpgradeType, CountryUpgradeType, CountryId
 from config import PRICES, ROUND_TIME
@@ -28,12 +29,14 @@ class City:
 
             case CityUpgradeType.LEVEL_UPGRADE: 
                 if self.level >= MAXIMUM_CITY_LEVEL + (1 if self.capital else 0): return False
-                self.level += 1
+                if self.country.balance < self.upgrade_price: raise NotEnoughMoney
                 self.country.balance -= self.upgrade_price
+                self.level += 1
                 await self.country.addLog("Уровень города <b>%s</b> повышен до %s" % (self.title, self.level))
 
             case CityUpgradeType.AIR_DEFENSE:
                 if self.air_defense: return False
+                if self.country.balance < PRICES["air_defense"]: raise NotEnoughMoney
                 self.air_defense = True
                 self.country.balance -= PRICES["air_defense"]
                 await self.country.addLog("Куплено ПВО для города <b>%s</b>" % self.title)
@@ -87,6 +90,7 @@ class Country:
         self.nuclear_rockets = 0
         self.nuclear_reactor = False
         self.nuclear_reactor_creating = False
+        self.nuclear_sended: list[City] = []
         self.cities = {i: City(title, i, self, i == 0) for i, title in enumerate(CITIES[country])}
 
     async def addUser(self, user: "db.User"):
@@ -97,6 +101,7 @@ class Country:
     async def upgrade(self, type: CountryUpgradeType) -> bool:
 
         if not self.game.actions_accessed: return False
+        if self.balance < PRICES[type.value]: raise NotEnoughMoney
 
         match type:
 
@@ -109,9 +114,9 @@ class Country:
             case CountryUpgradeType.NUCLEAR_ROCKET:
                 if not self.nuclear_reactor or self.nuclear_rockets >= 10: return False
                 self.nuclear_rockets += 1
-                await self.addLog("Приобретена <b>ядерный боеголовка</b> (Всего: %s)" % self.nuclear_rockets)
+                await self.addLog("Приобретена <b>ядерная боеголовка</b> (Всего: %s)" % self.nuclear_rockets)
 
-        self.balance -= PRICES[type]
+        self.balance -= PRICES[type.value]
         await self.sendUpdateEvent()
 
         return True
@@ -131,8 +136,10 @@ class Country:
     async def nuclearAttack(self, city: City) -> bool:
 
         if not self.nuclear_rockets or not self.game.actions_accessed: return False
+        if city in self.nuclear_sended: raise NuclearAlreadySended
 
         self.nuclear_rockets -= 1
+        self.nuclear_sended.append(city)
 
         log = await self.addLog("Запущена ядерная боеголовка на город <b>%s</b>" % city.title)
         
@@ -158,16 +165,18 @@ class Country:
 
         await self.game.room.eventmanager.addStageEvent(type = EventType.SEND_SANCTION, data = { "sender": self, "receiver": country })
         await self.game.room.eventmanager.addEvent(type = EventType.SEND_SANCTION, data = {
-            "sender": self.toPydanticModel(),
-            "receiver": country.toPydanticModel(),
-            "log": log
+            "sender": self.id,
+            "receiver": country.id
         }, targets = country.users + self.users)
+        await self.sendUpdateEvent()
+        await country.sendUpdateEvent()
 
         return True
 
     async def transferMoney(self, target: "Country", value: int) -> bool:
 
         if not self.game.actions_accessed: return False
+        if self.balance < value: raise NotEnoughMoney
 
         self.balance -= value
         target.balance += value
@@ -175,23 +184,20 @@ class Country:
         await self.game.room.eventmanager.addEvent(
             type = EventType.COUNTRY_TRANSFER,
             data = {
-                "sender": self.toPydanticModel(False),
-                "receiver": target.toPydanticModel(False),
+                "sender": self.id,
+                "receiver": target.id,
                 "value": value
             },
             targets = self.users + target.users
         )
+        await self.sendUpdateEvent()
         
         return True
     
     async def addMoney(self, value: int):
 
         self.balance += value
-        await self.game.room.eventmanager.addEvent(
-            type = EventType.COUNTRY_UPGRADE,
-            data = self.toPydanticModel(True),
-            targets = self.users
-        )
+        await self.sendUpdateEvent()
     
     async def addLog(self, text: str) -> models.Log:
 
@@ -223,6 +229,11 @@ class Country:
     def cities_count(self) -> int:
 
         return max([city.id for city in self.cities.values()]) + 1
+    
+    @property
+    def total_level(self) -> int:
+
+        return sum([city.level for city in self.cities.values()])
     
     # @property
     # def economy_progress(self) -> int:
@@ -292,16 +303,17 @@ class Game:
     def getMeetingData(self, user: "db.User" = None) -> models.MeetingData:
 
         return models.MeetingData(
-            defended_cities = [data[1] for data in self._meeting_data["defended_cities"] if not user or user.isowner or data[1].country == user.country.id],
+            defended_cities = [data for data in self._meeting_data["defended_cities"] if not user or user.isowner or data.country == user.country.id],
             destroyed_cities = self._meeting_data["destroyed_cities"],
             destroyed_countries = self._meeting_data["destroyed_countries"],
             sanctions = self._meeting_data["sanctions"],
-            ecology_donates = self._meeting_data["ecology_donates"]
+            ecology_donates = self._meeting_data["ecology_donates"],
+            countries_progress = self._meeting_data["countries_progress"]
         )
     
     async def endGame(self):
 
-        self.winner_country = min(self.countries.values(), key = lambda country: sum([city.level for city in country.cities.values()]), default = -1)
+        self.winner_country = max(self.countries.values(), key = lambda country: country.total_level, default = -1)
         if isinstance(self.winner_country, Country): self.winner_country = self.winner_country.toPydanticModel()
         await self.room.eventmanager.addEvent(
             type = EventType.GAME_ENDED
@@ -309,7 +321,7 @@ class Game:
 
     async def meetingStage(self):
 
-        self._meeting_data = {"defended_cities": [], "destroyed_countries": [], "destroyed_cities": [], "sanctions": [], "ecology_donates": []}
+        self._meeting_data = {"defended_cities": [], "destroyed_countries": [], "destroyed_cities": [], "sanctions": [], "ecology_donates": [], "countries_progress": {}}
         for event in await self.room.eventmanager.getStageEvents():
 
             match event.type:
@@ -330,9 +342,9 @@ class Game:
                         await attacked.country.addLog("Город <b>%s</b> был уничтожен" % attacked.title)
                         await attacked.delete()
                         if not attacked.country.cities:
-                            self._meeting_data["destroyed_countries"].append(attacked.toPydanticModel(False))
+                            self._meeting_data["destroyed_countries"].append(attacked.country.toPydanticModel(False))
                             await attacked.country.delete()
-                        self.ecology += NUCLEAR_ROCKET_ECOLOGY
+                    self.ecology += NUCLEAR_ROCKET_ECOLOGY
 
                 case EventType.SEND_SANCTION:
 
@@ -353,8 +365,13 @@ class Game:
                     country.nuclear_reactor = True
                     self.ecology += NUCLEAR_REACTOR_ECOLOGY
 
+        countries_progress = {country.id: country.total_level for country in self.countries.values()}
+        self._meeting_data['countries_progress'] = {
+            country: value / sum(countries_progress.values())
+            for country, value in sorted(countries_progress.items(), key=lambda x: x[1], reverse=True)
+        }
+        
         await self.room.eventmanager.clearStageEvents()
-
         self.meeting_stage = True
 
         await self.room.eventmanager.addEvent(
@@ -365,12 +382,13 @@ class Game:
     async def nextStage(self):
 
         if not self.meeting_stage: return await self.meetingStage()
-        if self.stage >= END_STAGE or len(self.countries) < (2 if not DEBUG_MODE else 1): return await self.endGame()
+        if self.stage >= END_STAGE or len(self.countries) <= (1 if not DEBUG_MODE else 0): return await self.endGame()
 
         for country in self.countries.values(): 
             country.balance += country.income
             country.ecology_count = 0
             country.sanction_sended = False
+            country.nuclear_sended.clear()
             country.sanctions.clear()
             await country.addLog("Начался %s раунд" % (self.stage + 1))
         for user in self.room.users: user.ready = False

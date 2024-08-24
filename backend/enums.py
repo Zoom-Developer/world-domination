@@ -47,6 +47,7 @@ class CountryId(str, Enum):
     lt = "lt"
     rk = "rk"
     jp = "jp"
+    ir = "ir"
     by = "by"
     ng = "ng"
     pa = "pa"

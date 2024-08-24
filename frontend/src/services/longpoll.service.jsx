@@ -58,7 +58,6 @@ export class LongpollService {
     }
 
     longpollHandler(event) {
-        console.log(event)
         const EventType = config.EventType
         switch (event.type) {
             case EventType.USER_JOINED:
@@ -108,15 +107,10 @@ export class LongpollService {
                 break
 
             case EventType.SEND_SANCTION:
-                if (event.data.receiver.id == this.country.id) {
-                    this.updateGameInfo()
-                    Notify.warning(`Страна ${config.Countries[event.data.sender.id]} наложила на вас санкции`)
+                if (event.data.receiver == this.country.id) {
+                    Notify.warning(`Страна ${config.Countries[event.data.sender]} наложила на вас санкции`)
                 }
-                else Notify.info(`Вы наложили санкции на страну ${config.Countries[event.data.receiver.id]}`)
-                this.setCountryF(prev => {
-                    prev.logs.push(event.data.log)
-                    return {...prev}
-                })
+                else Notify.info(`Вы наложили санкции на страну ${config.Countries[event.data.receiver]}`)
                 break
 
             case EventType.USER_READY:
@@ -124,25 +118,22 @@ export class LongpollService {
                 break
 
             case EventType.NUCLEAR_ATTACK:
-                Notify.info(`Вы запустили боеголовку на город ${event.data.attacked.title} (${config.Countries[event.data.attacked.country]})`)
+                if (!this.isOwner) Notify.info(`Вы запустили боеголовку на город ${event.data.attacked.title} (${config.Countries[event.data.attacked.country]})`)
                 this.setCountry(event.data.attacker)
-                this.setLogs(prev => ([...prev, event.data.log]))
                 break
 
             case EventType.DONATE_ECOLOGY:
-                Notify.info(`Вы внесли вклад в экономику`)
+                if (!this.isOwner) Notify.info(`Вы внесли вклад в экономику`)
                 this.setCountry(event.data)
                 break
 
             case EventType.COUNTRY_TRANSFER: {
                 let nf = Intl.NumberFormat()
                 if (event.data.sender.id == this.country.id) {
-                    this.setCountry(prev => ({...prev, balance: prev.balance - event.data.value}))
-                    Notify.success(`Вы перевели ${nf.format(event.data.value)}$ стране ${config.Countries[event.data.receiver.id]}`)
+                    Notify.success(`Вы перевели ${nf.format(event.data.value)}$ стране ${config.Countries[event.data.receiver]}`)
                 }
                 else {
-                    this.setCountry(prev => ({...prev, balance: prev.balance + event.data.value}))
-                    Notify.success(`Страна ${config.Countries[event.data.sender.id]} перевела вам ${nf.format(event.data.value)}$`)
+                    Notify.success(`Страна ${config.Countries[event.data.sender]} перевела вам ${nf.format(event.data.value)}$`)
                 }
                 break
             }

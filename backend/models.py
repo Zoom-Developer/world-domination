@@ -1,7 +1,7 @@
 import pydantic as pd
 from enums import EventType, CountryId
 from datetime import datetime
-from config import CITY_INCOME_RAISE, CITY_PRICE_RAISE, PRICES, MAXIMUM_CITY_LEVEL
+from config import CITY_INCOME_RAISE, CITY_PRICE_RAISE, DONATE_ECOLOGY_RAISE, PRICES, MAXIMUM_CITY_LEVEL, SANCTION_EFFECT
 from typing import List, Any, Dict, Union
 
 # ------------------------------------------------
@@ -54,6 +54,8 @@ class GameConfig(pd.BaseModel):
     LEVEL_UPGRADE_PRICE: int = PRICES['level_upgrade']
     DONATE_ECOLOGY: int = PRICES['donate_ecology']
     SEND_SANCTION: int = PRICES['send_sanction']
+    SANCTION_EFFECT: float = SANCTION_EFFECT
+    DONATE_ECOLOGY_RAISE: float = DONATE_ECOLOGY_RAISE
     CITY_INCOME_RAISE: int = CITY_INCOME_RAISE
     CITY_PRICE_RAISE: int = CITY_PRICE_RAISE
     MAX_CITY_LEVEL: int = MAXIMUM_CITY_LEVEL
@@ -70,6 +72,7 @@ class MeetingData(pd.BaseModel):
     defended_cities: List[City]
     sanctions: List[Sanction]
     ecology_donates: List[Country]
+    countries_progress: Dict[str, float]
 
 class Game(pd.BaseModel):
 

@@ -13,9 +13,7 @@ async def add_money(value: int = Body(embed = True), country: database.Country =
     Выдача денежных средств стране
     """
 
-    country.balance += value
-    await country.sendUpdateEvent()
-
+    await country.addMoney(value)
     return country.toPydanticModel(True)
 
 @DebugRouter.post("/start")

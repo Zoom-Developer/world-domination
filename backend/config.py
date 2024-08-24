@@ -1,27 +1,28 @@
 DEFAULT_CITY_LEVEL = 1
 DEFAULT_CITY_INCOME = 20
-DEFAULT_BALANCE = 200
+DEFAULT_BALANCE = 210
 MAXIMUM_CITY_LEVEL = 5
 
 ROUND_TIME = 10 * 60
 END_STAGE = 6
+SEND_NUCLEAR_STAGE = 3
 
 NUCLEAR_REACTOR_ECOLOGY = -3 # Единиц экологии
 NUCLEAR_ROCKET_ECOLOGY = -5 # Единиц экологии
-DONATE_ECOLOGY = 20 # Единиц экологии
+DONATE_ECOLOGY = 10 # Единиц экологии
 DONATE_ECOLOGY_RAISE = 0.2 # + %
 SANCTION_EFFECT = 0.1 # - %
 CITY_INCOME_RAISE = 10 # Единиц валюты
 CITY_PRICE_RAISE = 30 # Единиц валюты
 
-DEBUG_MODE = True
+DEBUG_MODE = False
 
 PRICES = {
     "level_upgrade": 30,
     "air_defense": 60,
     "nuclear_reactor": 120,
     "nuclear_rocket": 40,
-    "donate_ecology": 15,
+    "donate_ecology": 20,
     "send_sanction": 10,
     "country_spy": 20
 }
@@ -63,12 +64,18 @@ CITIES = { # 1 город - столица
         "Лиль",
         "Нант"
     ],
-    "pr": {
-        "Лиссабон (столица)",
+    "ir": [
+        "Тегеран",
+        "Мешхед",
+        "Исфахан",
+        "Шираз"
+    ],
+    "pr": [
+        "Лиссабон",
         "Порту",
         "Брага",
         "Лореш",
-    },
+    ],
     "lt": [
         "Рим",
         "Милан",
@@ -82,7 +89,7 @@ CITIES = { # 1 город - столица
         "Могилёв"
     ],
     "pa": [
-        "Газа (столица)",
+        "Газа",
         "Хан-Юнис",
         "Джебалия",
         "Рафах",
