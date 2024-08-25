@@ -91,6 +91,7 @@ class Country:
         self.nuclear_reactor = False
         self.nuclear_reactor_creating = False
         self.nuclear_sended: list[City] = []
+        self.ready = False
         self.cities = {i: City(title, i, self, i == 0) for i, title in enumerate(CITIES[country])}
 
     async def addUser(self, user: "db.User"):
@@ -181,6 +182,8 @@ class Country:
         self.balance -= value
         target.balance += value
 
+        log = await self.addLog("<b>%s</b> перевёл <b>%s</b> %s$" % (self.id.value, target.id.value, value))
+        await target.addLog(log.text)
         await self.game.room.eventmanager.addEvent(
             type = EventType.COUNTRY_TRANSFER,
             data = {
@@ -191,12 +194,14 @@ class Country:
             targets = self.users + target.users
         )
         await self.sendUpdateEvent()
+        await target.sendUpdateEvent()
         
         return True
     
-    async def addMoney(self, value: int):
+    async def addMoney(self, value: int, log: str):
 
         self.balance += value
+        if log: await self.addLog(log)
         await self.sendUpdateEvent()
     
     async def addLog(self, text: str) -> models.Log:
@@ -248,6 +253,7 @@ class Country:
             users = [user.toPydanticModel() for user in self.users],
             nuclear_rockets = self.nuclear_rockets if full else None,
             nuclear_reactor = self.nuclear_reactor if full else None,
+            nuclear_reactor_creating = self.nuclear_reactor_creating if full else None,
             ecology_total = self.ecology_count if full else None,
             income = self.income if full else None,
             # economy_progress = self.economy_progress if full else None,
@@ -487,7 +493,7 @@ class Game:
 
         return models.Game(
             stage = self.stage,
-            countries = [country.toPydanticModel(not user or user.country == country or user.isowner) for country in self.countries.values()],
+            countries = [country.toPydanticModel(not user or user.country == country or user.isowner or self.winner_country) for country in self.countries.values()],
             stage_end = self.stage_end,
             ecology = self.ecology,
             ready_users = self.ready_users,

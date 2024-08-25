@@ -4,7 +4,7 @@ DEFAULT_BALANCE = 210
 MAXIMUM_CITY_LEVEL = 5
 
 ROUND_TIME = 10 * 60
-END_STAGE = 6
+END_STAGE = 7
 SEND_NUCLEAR_STAGE = 3
 
 NUCLEAR_REACTOR_ECOLOGY = -3 # Единиц экологии
@@ -15,7 +15,7 @@ SANCTION_EFFECT = 0.1 # - %
 CITY_INCOME_RAISE = 10 # Единиц валюты
 CITY_PRICE_RAISE = 30 # Единиц валюты
 
-DEBUG_MODE = False
+DEBUG_MODE = True
 
 PRICES = {
     "level_upgrade": 30,
@@ -87,6 +87,12 @@ CITIES = { # 1 город - столица
         "Гомель",
         "Витебск",
         "Могилёв"
+    ],
+    "ch": [
+        "Берн",
+        "Цюрих",
+        "Женева",
+        "Люцерн"
     ],
     "pa": [
         "Газа",

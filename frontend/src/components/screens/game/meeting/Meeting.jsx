@@ -56,7 +56,7 @@ export default function MeetingPage({game, country, user}) {
                     <h3>Вклады в экологию:</h3>
                     <h4>
                         {game.meeting.ecology_donates.reduce((acc, obj) => acc.find(item => item.id === obj.id) ? acc : [...acc, obj], []).map(data => (
-                            <b key={data.id}>{`${config.Countries[data.id]} (+${game.meeting.ecology_donates.filter(c => c.id == data.id).length * 20}%)`}, </b>
+                            <b key={data.id}>{`${config.Countries[data.id]} (+${game.meeting.ecology_donates.filter(c => c.id == data.id).length * game.config.SANCTION_EFFECT * 100}%)`}, </b>
                         ))}
                     </h4>
                 </div>

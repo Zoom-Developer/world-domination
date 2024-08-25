@@ -8,7 +8,7 @@ RoomRouter = APIRouter()
 db = database.Database()
 
 @RoomRouter.post("")
-async def create_room(maxcount: int = Body(embed = True, ge = 2, le = 30), ownername: str = Body(embed = True)) -> LoginResponse:
+async def create_room(maxcount: int = Body(embed = True, ge = 2, le = 40), ownername: str = Body(embed = True)) -> LoginResponse:
     """
     Создание новой комнаты
     """

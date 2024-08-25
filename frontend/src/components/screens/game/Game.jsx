@@ -9,6 +9,7 @@ import { formatTime } from "../../../assets/js/utils";
 import styles from './Game.module.css';
 import config from "../../../assets/js/config";
 import EndGame from "./EndGame";
+import LogPanel from "./log-panel/LogPanel";
 
 export default function Game() {
 
@@ -96,5 +97,10 @@ export default function Game() {
                         </>
                     : <OwnerPanel country={country} user={user} game={game} />
         }
-    </>)
+
+        {/* {country && !user.isowner
+            ? <LogPanel logs={country.logs} />
+            : user.isowner && <LogPanel logs={[].concat(...game.countries.map(c => c.logs.map(l => Object.assign(l, {country: c.id}))))} for_owner={true} />
+        } */}
+    </>) 
 }

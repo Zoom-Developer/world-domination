@@ -101,6 +101,8 @@ export default function Lobby() {
 			<button onClick={quitGame}>Выход</button>
 		</div>
 
+		{/* <span className={styles.tgtools}>Проект разработчика МГ:<br/>Telegram Tools (<a target='_blank' href='https://t.me/tgtools_ru'>@tgtools_ru</a>)</span> */}
+
 		{kickVisible &&
 			<ModalWindow button_title="Исключить" button_callback={() => kickUser(kickUserId)} setOpened={setKickVisible}>
 				<select value={kickUserId} onChange={e => setKickUserId(e.target.value)}>

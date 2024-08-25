@@ -37,6 +37,7 @@ body {
 
 .round-end-info {
     display: flex;
+    align-items: center;
     width: 50%;
     flex-direction: column;
     gap: 30px;
@@ -52,6 +53,7 @@ body {
 
 .content h3 {
     color: rgba(255, 255, 255, 0.35);
+    text-align: center;
     font-family: Inter;
     font-size: 26px;
     font-style: normal;
@@ -60,6 +62,7 @@ body {
 
 .content h4 {
     color: rgba(255, 255, 255, 0.95);
+    text-align: center;
     font-family: Inter;
     font-size: 22px;
     font-style: normal;

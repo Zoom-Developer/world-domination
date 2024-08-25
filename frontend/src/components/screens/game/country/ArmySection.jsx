@@ -41,8 +41,9 @@ export default function ArmySection({game, country}) {
 
             <div className={styles['army-cards']}>
                 {
-                    config.CountryUpgrades.map(upgrade => (
-                        <div key={upgrade.id} className={styles['army-card']}>
+                    config.CountryUpgrades.map(upgrade => {
+                        const bought = upgrade.id == "nuclear_reactor" & (country.nuclear_reactor || country.nuclear_reactor_creating)
+                        return <div key={upgrade.id} className={styles['army-card']}>
                             <div className={styles.price}>
                                 <h2>Стоимость: <b>{nf.format(game.config[upgrade.price_type])}$</b></h2>
                             </div>
@@ -51,14 +52,13 @@ export default function ArmySection({game, country}) {
                                 <div className={styles.icon}><img src={upgrade.img} /></div>
                                 <p className={styles.description}>{upgrade.desc}</p>
                             </div>
-                            {!!(upgrade.bought = upgrade.id == "nuclear_reactor" & country.nuclear_reactor) && ""}
                             <button onClick={
                                 upgrade.id != "shield" 
                                 ? () => UpgradeCountry(upgrade.id) 
                                 : () => setDefenseVisible(true)
-                            } disabled={upgrade.bought}>{upgrade.bought ? "Приобретено" : "Приобрести"}</button>
+                            } disabled={bought}>{bought ? (country.nuclear_reactor ? "Приобретено" : "Строительство") : "Приобрести"}</button>
                         </div>
-                    ))
+                    })
                 }
             </div>
 

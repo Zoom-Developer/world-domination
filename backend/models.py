@@ -42,6 +42,7 @@ class Country(pd.BaseModel):
     # economy_progress: int | None
     nuclear_rockets: int | None
     nuclear_reactor: bool | None
+    nuclear_reactor_creating: bool | None
     logs: List[Log] | None
     users: List[User]
     cities: Dict[int, City]

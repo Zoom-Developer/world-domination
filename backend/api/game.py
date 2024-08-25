@@ -35,10 +35,10 @@ async def next_stage(user: database.User = Depends(isOwner), game: database.Game
 @GameRouter.post("/country/{countryId}/money")
 async def send_money(user: database.User = Depends(isOwner), value: int = Body(embed=True), country: database.Country = Depends(getCountry)) -> Country:
     """
-    Отправка денег стране
+    Отправка денег стране от ведущего
     """
 
-    await country.addMoney(value)
+    await country.addMoney(value, f"Получено <b>{value}$</b> от ведущего")
 
     return country.toPydanticModel(True)
 

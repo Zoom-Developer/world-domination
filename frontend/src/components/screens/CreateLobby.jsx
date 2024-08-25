@@ -23,7 +23,7 @@ export default function CreateLobby() {
             maxcount: data.count
         }).then(async response => {
             const json = await response.json()
-            if (response.status == 422) Notify.failure("Минимальное количество участников - 2, максимальное - 30")
+            if (response.status == 422) Notify.failure("Минимальное количество участников - 2, максимальное - 40")
             else if (response.status != 200) Notify.failure(json.detail)
             else {
                 Notify.success("Лобби было создано")

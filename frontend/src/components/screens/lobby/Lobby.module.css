@@ -148,3 +148,18 @@ li {
 .center-wrapper button:hover {
   background-color: rgba(0, 0, 0, 0.65);
 }
+
+.tgtools {
+  position: absolute;
+  left: calc(50% - 24px);
+  top: 15px;
+  color: rgb(118, 118, 118);
+  font-size: 28px;
+  font-weight: 600;
+  text-align: center;
+  font-family: 'Inter';
+}
+
+.tgtools a {
+  color: white;
+}

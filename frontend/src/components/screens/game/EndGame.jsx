@@ -28,6 +28,8 @@ export default function EndGame({winner, isowner}) {
         <FormContainer>
             <button onClick={quitGame}>{isowner ? "Закончить игру" : "Выход из игры"}</button>
         </FormContainer>
+
+        <LogPanel logs={[].concat(...game.countries.map(c => c.logs.map(l => Object.assign(l, {country: c.id}))))} for_owner={true} />
     </>)
 }
 EndGame.propTypes = {
